@@ -80,7 +80,7 @@ const MortgageCalculator = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-8">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4 oswald-heading">
+          <h2 className="text-4xl font-bold text-slate-900 mb-4 inter-heading">
             Discover Your Perfect Mortgage Match
           </h2>
           <p className="text-lg text-blue-700 max-w-3xl mx-auto">

@@ -8,7 +8,7 @@ import { Switch } from './ui/switch';
 import { Separator } from './ui/separator';
 import { Home, Percent, Calendar, CreditCard, TrendingDown, DollarSign } from 'lucide-react';
 
-const InputForm = ({ inputs, onInputChange }) => {
+const InputForm = ({ inputs, onInputChange, selectedProperty }) => {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

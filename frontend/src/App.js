@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MortgageCalculator from "./components/MortgageCalculator";
+import PropertyCalculator from "./components/PropertyCalculator";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<MortgageCalculator />} />
+          <Route path="/" element={<PropertyCalculator />} />
         </Routes>
       </BrowserRouter>
       <Toaster />

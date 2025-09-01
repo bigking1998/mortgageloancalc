@@ -1,10 +1,10 @@
 // Property API service using Zillow RapidAPI
 const RAPIDAPI_KEY = process.env.REACT_APP_RAPIDAPI_KEY;
-const ZILLOW_API_BASE = 'https://zillow-com1.p.rapidapi.com';
+const ZILLOW_API_BASE = 'https://real-time-zillow-data.p.rapidapi.com';
 
 const apiHeaders = {
   'X-RapidAPI-Key': RAPIDAPI_KEY,
-  'X-RapidAPI-Host': 'zillow-com1.p.rapidapi.com'
+  'X-RapidAPI-Host': 'real-time-zillow-data.p.rapidapi.com'
 };
 
 // Mock data for development (replace with real API calls when API key is available)
@@ -61,7 +61,7 @@ const MOCK_PROPERTIES = [
 
 export const searchPropertiesByAddress = async (address) => {
   // If API key is not available, return mock data
-  if (!RAPIDAPI_KEY) {
+  if (!RAPIDAPI_KEY || RAPIDAPI_KEY === 'your_rapidapi_key_here') {
     console.warn('RapidAPI key not found, using mock data');
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
     return MOCK_PROPERTIES.filter(property => 
@@ -70,7 +70,14 @@ export const searchPropertiesByAddress = async (address) => {
   }
 
   try {
-    const response = await fetch(`${ZILLOW_API_BASE}/propertybyaddress?address=${encodeURIComponent(address)}`, {
+    const queryParams = new URLSearchParams({
+      address: address,
+      matchHouseNumber: '20',
+      pageNumber: '1',
+      pageSize: '10'
+    });
+
+    const response = await fetch(`${ZILLOW_API_BASE}/property-details-address?${queryParams}`, {
       method: 'GET',
       headers: apiHeaders
     });
@@ -80,7 +87,23 @@ export const searchPropertiesByAddress = async (address) => {
     }
 
     const data = await response.json();
-    return data.results || [];
+    
+    // Transform API response to match our expected format
+    const transformedResults = data.results?.map(property => ({
+      zpid: property.zpid,
+      address: property.address || `${property.streetAddress}, ${property.city}, ${property.state} ${property.zipcode}`,
+      price: property.price || property.zestimate,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      livingArea: property.livingArea,
+      propertyType: property.propertyType,
+      yearBuilt: property.yearBuilt,
+      zestimate: property.zestimate,
+      images: property.photos?.slice(0, 5) || [],
+      description: property.description || `${property.propertyType} in ${property.city}, ${property.state}`
+    })) || [];
+
+    return transformedResults;
   } catch (error) {
     console.error('Error searching properties:', error);
     // Fallback to mock data on error
@@ -92,7 +115,7 @@ export const searchPropertiesByAddress = async (address) => {
 
 export const getPropertyDetails = async (zpid) => {
   // If API key is not available, return mock data
-  if (!RAPIDAPI_KEY) {
+  if (!RAPIDAPI_KEY || RAPIDAPI_KEY === 'your_rapidapi_key_here') {
     console.warn('RapidAPI key not found, using mock data');
     await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API delay
     const mockProperty = MOCK_PROPERTIES.find(p => p.zpid === zpid);
@@ -100,7 +123,7 @@ export const getPropertyDetails = async (zpid) => {
   }
 
   try {
-    const response = await fetch(`${ZILLOW_API_BASE}/property?zpid=${zpid}`, {
+    const response = await fetch(`${ZILLOW_API_BASE}/property-details?zpid=${zpid}`, {
       method: 'GET',
       headers: apiHeaders
     });
@@ -110,7 +133,23 @@ export const getPropertyDetails = async (zpid) => {
     }
 
     const data = await response.json();
-    return data;
+    
+    // Transform API response to match our expected format
+    const transformedProperty = {
+      zpid: data.zpid,
+      address: data.address || `${data.streetAddress}, ${data.city}, ${data.state} ${data.zipcode}`,
+      price: data.price || data.zestimate,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
+      livingArea: data.livingArea,
+      propertyType: data.propertyType,
+      yearBuilt: data.yearBuilt,
+      zestimate: data.zestimate,
+      images: data.photos?.slice(0, 5) || [],
+      description: data.description || `${data.propertyType} in ${data.city}, ${data.state}`
+    };
+
+    return transformedProperty;
   } catch (error) {
     console.error('Error fetching property details:', error);
     // Fallback to mock data on error
@@ -119,11 +158,43 @@ export const getPropertyDetails = async (zpid) => {
   }
 };
 
+export const getPropertyZestimate = async (address) => {
+  // If API key is not available, return mock data
+  if (!RAPIDAPI_KEY || RAPIDAPI_KEY === 'your_rapidapi_key_here') {
+    console.warn('RapidAPI key not found, using mock zestimate');
+    return { zestimate: 500000, rentZestimate: 2500 };
+  }
+
+  try {
+    const queryParams = new URLSearchParams({
+      address: address
+    });
+
+    const response = await fetch(`${ZILLOW_API_BASE}/property-zestimate?${queryParams}`, {
+      method: 'GET',
+      headers: apiHeaders
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return {
+      zestimate: data.zestimate,
+      rentZestimate: data.rentZestimate
+    };
+  } catch (error) {
+    console.error('Error fetching zestimate:', error);
+    return { zestimate: 500000, rentZestimate: 2500 };
+  }
+};
+
 export const searchPropertiesByFilters = async (filters) => {
   const { city, state, priceMin, priceMax, bedrooms, propertyType } = filters;
   
   // If API key is not available, return filtered mock data
-  if (!RAPIDAPI_KEY) {
+  if (!RAPIDAPI_KEY || RAPIDAPI_KEY === 'your_rapidapi_key_here') {
     console.warn('RapidAPI key not found, using mock data');
     await new Promise(resolve => setTimeout(resolve, 1200)); // Simulate API delay
     
@@ -156,11 +227,12 @@ export const searchPropertiesByFilters = async (filters) => {
   try {
     const queryParams = new URLSearchParams();
     if (city) queryParams.append('city', city);
-    if (state) queryParams.append('state', state);
+    if (state) queryParams.append('state_code', state);
     if (priceMin) queryParams.append('price_min', priceMin);
     if (priceMax) queryParams.append('price_max', priceMax);
-    if (bedrooms) queryParams.append('bedrooms', bedrooms);
-    if (propertyType) queryParams.append('property_type', propertyType);
+    if (bedrooms) queryParams.append('beds_min', bedrooms);
+    if (propertyType) queryParams.append('home_type', propertyType);
+    queryParams.append('page', '1');
 
     const response = await fetch(`${ZILLOW_API_BASE}/search?${queryParams}`, {
       method: 'GET',
@@ -172,7 +244,23 @@ export const searchPropertiesByFilters = async (filters) => {
     }
 
     const data = await response.json();
-    return data.results || [];
+    
+    // Transform API response to match our expected format
+    const transformedResults = data.results?.map(property => ({
+      zpid: property.zpid,
+      address: `${property.streetAddress}, ${property.city}, ${property.state} ${property.zipcode}`,
+      price: property.price || property.zestimate,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      livingArea: property.livingArea,
+      propertyType: property.propertyType,
+      yearBuilt: property.yearBuilt,
+      zestimate: property.zestimate,
+      images: property.photos?.slice(0, 5) || [],
+      description: `${property.propertyType} in ${property.city}, ${property.state}`
+    })) || [];
+
+    return transformedResults;
   } catch (error) {
     console.error('Error searching properties by filters:', error);
     return MOCK_PROPERTIES;

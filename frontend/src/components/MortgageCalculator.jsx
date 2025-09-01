@@ -53,9 +53,9 @@ const MortgageCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-gradient-to-r from-white to-blue-50 shadow-lg border-b border-blue-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -65,13 +65,13 @@ const MortgageCalculator = () => {
                 className="h-12 w-auto"
               />
               <div>
-                <h1 className="text-xl font-bold text-slate-900">Mortgage Rate Comparison Calculator</h1>
-                <p className="text-sm text-slate-600">Compare loan options and find your best rate</p>
+                <h1 className="text-xl font-bold text-slate-900 oswald-heading">Mortgage Rate Comparison Calculator</h1>
+                <p className="text-sm text-blue-600">Compare loan options and find your best rate</p>
               </div>
             </div>
-            <div className="text-right text-sm text-slate-600">
-              <p className="font-semibold">{BUSINESS_INFO.company}</p>
-              <p>NMLS: {BUSINESS_INFO.nmls}</p>
+            <div className="text-right text-sm text-blue-700">
+              <p className="font-semibold oswald-light">{BUSINESS_INFO.company}</p>
+              <p className="text-blue-600">NMLS: {BUSINESS_INFO.nmls}</p>
             </div>
           </div>
         </div>
@@ -80,10 +80,10 @@ const MortgageCalculator = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl font-bold text-slate-900 mb-4 oswald-heading">
             Discover Your Perfect Mortgage Match
           </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-lg text-blue-700 max-w-3xl mx-auto">
             Compare rates across all major loan types with advanced calculations including PMI cancellation, 
             ARM stress testing, and closing cost optimization. Get your personalized analysis in seconds.
           </p>
@@ -101,18 +101,18 @@ const MortgageCalculator = () => {
           {/* Results */}
           <div className="lg:col-span-8">
             <Tabs defaultValue="comparison" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="comparison" className="flex items-center gap-2">
+              <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-blue-100 to-blue-50">
+                <TabsTrigger value="comparison" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <Calculator className="w-4 h-4" />
-                  Comparison
+                  <span className="oswald-light">Comparison</span>
                 </TabsTrigger>
-                <TabsTrigger value="arm-analysis" className="flex items-center gap-2">
+                <TabsTrigger value="arm-analysis" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <TrendingUp className="w-4 h-4" />
-                  ARM Analysis
+                  <span className="oswald-light">ARM Analysis</span>
                 </TabsTrigger>
-                <TabsTrigger value="cost-breakdown" className="flex items-center gap-2">
+                <TabsTrigger value="cost-breakdown" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <FileText className="w-4 h-4" />
-                  Cost Breakdown
+                  <span className="oswald-light">Cost Breakdown</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -131,34 +131,34 @@ const MortgageCalculator = () => {
 
               <TabsContent value="cost-breakdown">
                 {results && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Detailed Cost Analysis</CardTitle>
-                      <CardDescription>
+                  <Card className="border-blue-200 shadow-lg">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50">
+                      <CardTitle className="oswald-heading text-blue-900">Detailed Cost Analysis</CardTitle>
+                      <CardDescription className="text-blue-700">
                         Break down of all costs over different time periods
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
                         {Object.entries(results).map(([key, loan]) => (
-                          <div key={key} className="border rounded-lg p-4">
-                            <h4 className="font-semibold text-lg mb-2">{loan.loanType}</h4>
+                          <div key={key} className="border border-blue-200 rounded-lg p-4 bg-gradient-to-r from-blue-25 to-white">
+                            <h4 className="font-semibold text-lg mb-2 text-blue-900 oswald-light">{loan.loanType}</h4>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                               <div>
-                                <p className="text-slate-600">Monthly P&I</p>
-                                <p className="font-semibold">${loan.monthlyPI.toLocaleString()}</p>
+                                <p className="text-blue-600">Monthly P&I</p>
+                                <p className="font-semibold text-blue-900">${loan.monthlyPI.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-slate-600">Monthly MI</p>
-                                <p className="font-semibold">${loan.monthlyMI.toLocaleString()}</p>
+                                <p className="text-blue-600">Monthly MI</p>
+                                <p className="font-semibold text-blue-900">${loan.monthlyMI.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-slate-600">5-Year Cost</p>
-                                <p className="font-semibold">${loan.cost60Month.toLocaleString()}</p>
+                                <p className="text-blue-600">5-Year Cost</p>
+                                <p className="font-semibold text-blue-900">${loan.cost60Month.toLocaleString()}</p>
                               </div>
                               <div>
-                                <p className="text-slate-600">Lifetime Interest</p>
-                                <p className="font-semibold">${(loan.lifetimeCost - (inputs.homePrice - (inputs.homePrice * inputs.downPaymentPercent / 100))).toLocaleString()}</p>
+                                <p className="text-blue-600">Lifetime Interest</p>
+                                <p className="font-semibold text-blue-900">${(loan.lifetimeCost - (inputs.homePrice - (inputs.homePrice * inputs.downPaymentPercent / 100))).toLocaleString()}</p>
                               </div>
                             </div>
                           </div>
@@ -171,24 +171,24 @@ const MortgageCalculator = () => {
             </Tabs>
 
             {/* CTA Section */}
-            <Card className="mt-8 border-blue-200 bg-gradient-to-r from-blue-50 to-slate-50">
+            <Card className="mt-8 border-blue-300 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 shadow-xl">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">
+                    <h3 className="text-xl font-bold text-blue-900 mb-2 oswald-heading">
                       Get Your Complete Underwriter-Style Report
                     </h3>
-                    <p className="text-slate-600">
+                    <p className="text-blue-700">
                       Download a comprehensive PDF analysis with all calculations, 
                       recommendations, and next steps tailored to your situation.
                     </p>
                   </div>
                   <Button 
                     onClick={handleGenerateReport}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 shadow-lg"
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    Download Report
+                    <span className="oswald-light">Download Report</span>
                   </Button>
                 </div>
               </CardContent>

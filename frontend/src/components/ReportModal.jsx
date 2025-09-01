@@ -248,7 +248,7 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
               onClick={onClose}
               className="sm:w-24 border-blue-300 text-blue-700 hover:bg-blue-50"
             >
-              <span className="oswald-light">Cancel</span>
+              <span className="inter-light">Cancel</span>
             </Button>
           </div>
 

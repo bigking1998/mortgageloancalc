@@ -161,7 +161,7 @@ const ComparisonTable = ({ results }) => {
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-blue-700 mt-0.5" />
             <div className="text-sm text-blue-900">
-              <p className="font-semibold mb-1 oswald-light">Important Notes:</p>
+              <p className="font-semibold mb-1 inter-light">Important Notes:</p>
               <ul className="space-y-1 text-xs text-blue-800">
                 <li>• Rates shown include credit score adjustments and discount points</li>
                 <li>• PMI cancellation is modeled according to current regulations</li>

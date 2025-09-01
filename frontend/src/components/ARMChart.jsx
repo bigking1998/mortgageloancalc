@@ -99,7 +99,7 @@ const ARMChart = ({ armData, loanAmount }) => {
             {/* Payment Difference Analysis */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-blue-200">
               <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-                <h4 className="font-semibold text-blue-900 mb-1 oswald-light">Best Case Savings</h4>
+                <h4 className="font-semibold text-blue-900 mb-1 inter-light">Best Case Savings</h4>
                 <p className="text-2xl font-bold text-blue-700">
                   {formatCurrency(armData.initial - armData.bestCase)}
                 </p>
@@ -107,7 +107,7 @@ const ARMChart = ({ armData, loanAmount }) => {
               </div>
               
               <div className="text-center p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg border border-blue-300">
-                <h4 className="font-semibold text-blue-900 mb-1 oswald-light">Likely Increase</h4>
+                <h4 className="font-semibold text-blue-900 mb-1 inter-light">Likely Increase</h4>
                 <p className="text-2xl font-bold text-blue-800">
                   {formatCurrency(armData.likely - armData.initial)}
                 </p>
@@ -115,7 +115,7 @@ const ARMChart = ({ armData, loanAmount }) => {
               </div>
               
               <div className="text-center p-4 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg border border-blue-400">
-                <h4 className="font-semibold text-blue-900 mb-1 oswald-light">Worst Case Risk</h4>
+                <h4 className="font-semibold text-blue-900 mb-1 inter-light">Worst Case Risk</h4>
                 <p className="text-2xl font-bold text-blue-900">
                   {formatCurrency(armData.worstCase - armData.initial)}
                 </p>

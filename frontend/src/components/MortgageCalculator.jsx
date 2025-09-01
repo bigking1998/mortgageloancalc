@@ -65,12 +65,12 @@ const MortgageCalculator = () => {
                 className="h-12 w-auto"
               />
               <div>
-                <h1 className="text-xl font-bold text-slate-900 oswald-heading">Mortgage Rate Comparison Calculator</h1>
+                <h1 className="text-xl font-bold text-slate-900 inter-heading">Mortgage Rate Comparison Calculator</h1>
                 <p className="text-sm text-blue-600">Compare loan options and find your best rate</p>
               </div>
             </div>
             <div className="text-right text-sm text-blue-700">
-              <p className="font-semibold oswald-light">{BUSINESS_INFO.company}</p>
+              <p className="font-semibold inter-light">{BUSINESS_INFO.company}</p>
               <p className="text-blue-600">NMLS: {BUSINESS_INFO.nmls}</p>
             </div>
           </div>

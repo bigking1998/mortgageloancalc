@@ -121,7 +121,7 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-blue-200">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-blue-900 oswald-heading">
+          <DialogTitle className="flex items-center gap-2 text-blue-900 inter-heading">
             <FileText className="w-5 h-5 text-blue-700" />
             Get Your Complete Mortgage Analysis Report
           </DialogTitle>

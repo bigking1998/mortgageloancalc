@@ -83,7 +83,7 @@ const ComparisonTable = ({ results }) => {
                 <TableRow key={key} className="hover:bg-blue-25">
                   <TableCell className="font-medium">
                     <div className="flex flex-col">
-                      <span className="text-blue-900 oswald-light">{loan.loanType}</span>
+                      <span className="text-blue-900 inter-light">{loan.loanType}</span>
                       <span className="text-xs text-blue-600">{loan.description}</span>
                     </div>
                   </TableCell>

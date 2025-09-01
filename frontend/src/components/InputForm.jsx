@@ -28,6 +28,14 @@ const InputForm = ({ inputs, onInputChange, selectedProperty }) => {
           <CardDescription className="text-blue-700">Enter your basic loan information</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 pt-6">
+          {selectedProperty && (
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 mb-4">
+              <p className="text-xs text-blue-600 mb-1">Property Selected:</p>
+              <p className="text-sm font-medium text-blue-900">{selectedProperty.address}</p>
+              <p className="text-xs text-blue-700">Price auto-populated from selected property</p>
+            </div>
+          )}
+          
           <div className="space-y-2">
             <Label htmlFor="homePrice" className="text-sm font-medium text-blue-900">Home Price</Label>
             <div className="relative">

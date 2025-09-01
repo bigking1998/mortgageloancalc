@@ -17,18 +17,26 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
 
   // Address suggestions for autocomplete
   const ADDRESS_SUGGESTIONS = [
-    '123 Main Street, New York, NY',
-    '456 Oak Avenue, Los Angeles, CA',
-    '789 Pine Street, Miami, FL',
-    '101 Broadway, New York, NY',
-    '555 Market Street, San Francisco, CA',
-    '777 Sunset Boulevard, Los Angeles, CA',
-    '999 Ocean Avenue, Miami Beach, FL',
-    '1600 Amphitheatre Parkway, Mountain View, CA',
-    '1 Infinite Loop, Cupertino, CA',
-    '350 Fifth Avenue, New York, NY',
-    '1600 Pennsylvania Avenue, Washington, DC',
-    '2000 Avenue of the Stars, Los Angeles, CA'
+    '123 Main Street, New York, NY 10001',
+    '456 Oak Avenue, Los Angeles, CA 90210', 
+    '789 Pine Street, Miami, FL 33101',
+    '101 Broadway, New York, NY 10005',
+    '555 Market Street, San Francisco, CA 94105',
+    '777 Sunset Boulevard, Los Angeles, CA 90028',
+    '999 Ocean Avenue, Miami Beach, FL 33139',
+    '1600 Amphitheatre Parkway, Mountain View, CA 94043',
+    '1 Infinite Loop, Cupertino, CA 95014',
+    '350 Fifth Avenue, New York, NY 10118',
+    '1600 Pennsylvania Avenue, Washington, DC 20500',
+    '2000 Avenue of the Stars, Los Angeles, CA 90067',
+    '5th Avenue, New York, NY',
+    'Wall Street, New York, NY',
+    'Hollywood Boulevard, Los Angeles, CA',
+    'Rodeo Drive, Beverly Hills, CA',
+    'Times Square, New York, NY',
+    'Central Park West, New York, NY',
+    'Madison Avenue, New York, NY',
+    'Park Avenue, New York, NY'
   ];
 
   const formatCurrency = (value) => {
@@ -47,12 +55,12 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
   const handleSearchInputChange = (value) => {
     setSearchTerm(value);
     
-    if (value.length > 2) {
+    if (value.length >= 2) {
       const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address =>
         address.toLowerCase().includes(value.toLowerCase())
       );
-      setSuggestions(filteredSuggestions);
-      setShowSuggestions(true);
+      setSuggestions(filteredSuggestions.slice(0, 8)); // Show max 8 suggestions
+      setShowSuggestions(filteredSuggestions.length > 0);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -71,7 +79,18 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
     // Delay hiding to allow suggestion clicks
     setTimeout(() => {
       setShowSuggestions(false);
-    }, 200);
+    }, 150);
+  };
+
+  // Show suggestions when input is focused
+  const handleInputFocus = () => {
+    if (searchTerm.length >= 2) {
+      const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address =>
+        address.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions.slice(0, 8));
+      setShowSuggestions(filteredSuggestions.length > 0);
+    }
   };
 
   const handleSearch = async () => {

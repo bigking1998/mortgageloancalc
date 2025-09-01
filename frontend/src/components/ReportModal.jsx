@@ -160,7 +160,7 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
 
           {/* Contact Form */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-blue-900 oswald-light">Contact Information</h3>
+            <h3 className="font-semibold text-blue-900 inter-light">Contact Information</h3>
             
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium text-blue-900">Full Name *</Label>

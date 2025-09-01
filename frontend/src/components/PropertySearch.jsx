@@ -15,28 +15,96 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Address suggestions for autocomplete
+  // Comprehensive address suggestions for autocomplete
   const ADDRESS_SUGGESTIONS = [
+    // New York addresses
+    '11 24th Street, New York, NY 10011',
+    '25 24th Street, New York, NY 10010',
     '123 Main Street, New York, NY 10001',
-    '456 Oak Avenue, Los Angeles, CA 90210', 
-    '789 Pine Street, Miami, FL 33101',
-    '101 Broadway, New York, NY 10005',
-    '555 Market Street, San Francisco, CA 94105',
+    '456 Broadway, New York, NY 10013',
+    '789 Park Avenue, New York, NY 10021',
+    '101 Central Park West, New York, NY 10023',
+    '250 Madison Avenue, New York, NY 10016',
+    '350 Fifth Avenue, New York, NY 10118',
+    '500 Times Square, New York, NY 10036',
+    '85 Wall Street, New York, NY 10005',
+    '15 East 84th Street, New York, NY 10028',
+    '200 West 79th Street, New York, NY 10024',
+    '75 Liberty Street, New York, NY 10006',
+    '300 East 23rd Street, New York, NY 10010',
+    
+    // Los Angeles addresses
+    '456 Oak Avenue, Los Angeles, CA 90210',
     '777 Sunset Boulevard, Los Angeles, CA 90028',
+    '1234 Hollywood Boulevard, Los Angeles, CA 90028',
+    '555 Rodeo Drive, Beverly Hills, CA 90210',
+    '888 Wilshire Boulevard, Los Angeles, CA 90017',
+    '2000 Avenue of the Stars, Los Angeles, CA 90067',
+    '1600 Vine Street, Los Angeles, CA 90028',
+    '9000 Sunset Boulevard, West Hollywood, CA 90069',
+    '1 Santa Monica Boulevard, Santa Monica, CA 90401',
+    '3000 Olympic Boulevard, Los Angeles, CA 90006',
+    
+    // Miami addresses
+    '789 Pine Street, Miami, FL 33101',
     '999 Ocean Avenue, Miami Beach, FL 33139',
+    '1500 Collins Avenue, Miami Beach, FL 33139',
+    '200 Biscayne Boulevard, Miami, FL 33131',
+    '500 Lincoln Road, Miami Beach, FL 33139',
+    '300 Ocean Drive, Miami Beach, FL 33139',
+    '1000 South Beach Drive, Miami Beach, FL 33139',
+    '400 Alton Road, Miami Beach, FL 33139',
+    
+    // Chicago addresses
+    '100 North Michigan Avenue, Chicago, IL 60601',
+    '500 Lake Shore Drive, Chicago, IL 60611',
+    '1000 West Madison Street, Chicago, IL 60607',
+    '250 East Pearson Street, Chicago, IL 60611',
+    '800 North State Street, Chicago, IL 60610',
+    
+    // San Francisco addresses
+    '555 Market Street, San Francisco, CA 94105',
     '1600 Amphitheatre Parkway, Mountain View, CA 94043',
     '1 Infinite Loop, Cupertino, CA 95014',
-    '350 Fifth Avenue, New York, NY 10118',
+    '101 California Street, San Francisco, CA 94111',
+    '500 Terry Francois Boulevard, San Francisco, CA 94158',
+    '2000 Van Ness Avenue, San Francisco, CA 94109',
+    
+    // Boston addresses
+    '100 Federal Street, Boston, MA 02110',
+    '200 Clarendon Street, Boston, MA 02116',
+    '500 Boylston Street, Boston, MA 02116',
+    '1 Beacon Street, Boston, MA 02108',
+    
+    // Washington DC addresses
     '1600 Pennsylvania Avenue, Washington, DC 20500',
-    '2000 Avenue of the Stars, Los Angeles, CA 90067',
-    '5th Avenue, New York, NY',
-    'Wall Street, New York, NY',
-    'Hollywood Boulevard, Los Angeles, CA',
-    'Rodeo Drive, Beverly Hills, CA',
-    'Times Square, New York, NY',
-    'Central Park West, New York, NY',
-    'Madison Avenue, New York, NY',
-    'Park Avenue, New York, NY'
+    '500 Constitution Avenue, Washington, DC 20001',
+    '1000 Connecticut Avenue, Washington, DC 20036',
+    
+    // Texas addresses
+    '100 Congress Avenue, Austin, TX 78701',
+    '500 Main Street, Dallas, TX 75201',
+    '1000 Louisiana Street, Houston, TX 77002',
+    
+    // Popular street names (partial for better matching)
+    'Main Street',
+    'Oak Street', 
+    'Pine Street',
+    'Park Avenue',
+    'Broadway',
+    '1st Street',
+    '2nd Street', 
+    '5th Avenue',
+    '24th Street',
+    '42nd Street',
+    'Madison Avenue',
+    'Wall Street',
+    'Sunset Boulevard',
+    'Hollywood Boulevard',
+    'Ocean Drive',
+    'Collins Avenue',
+    'Michigan Avenue',
+    'State Street'
   ];
 
   const formatCurrency = (value) => {
@@ -51,16 +119,49 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
     return new Intl.NumberFormat('en-US').format(num);
   };
 
-  // Handle address input changes and show suggestions
+  // Enhanced address search with better matching
   const handleSearchInputChange = (value) => {
     setSearchTerm(value);
     
     if (value.length >= 2) {
-      const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address =>
-        address.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions.slice(0, 8)); // Show max 8 suggestions
-      setShowSuggestions(filteredSuggestions.length > 0);
+      const searchLower = value.toLowerCase();
+      
+      // Filter suggestions with multiple matching strategies
+      const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address => {
+        const addressLower = address.toLowerCase();
+        
+        // Match if search term is at the beginning of address
+        if (addressLower.startsWith(searchLower)) return true;
+        
+        // Match if search term is anywhere in the address
+        if (addressLower.includes(searchLower)) return true;
+        
+        // Match individual words (e.g., "24th" matches "11 24th Street")
+        const searchWords = searchLower.split(' ');
+        const addressWords = addressLower.split(' ');
+        
+        return searchWords.every(searchWord => 
+          addressWords.some(addressWord => 
+            addressWord.includes(searchWord) || searchWord.includes(addressWord)
+          )
+        );
+      });
+      
+      // Sort suggestions to show most relevant first
+      const sortedSuggestions = filteredSuggestions.sort((a, b) => {
+        const aLower = a.toLowerCase();
+        const bLower = b.toLowerCase();
+        
+        // Prioritize exact matches at start
+        if (aLower.startsWith(searchLower) && !bLower.startsWith(searchLower)) return -1;
+        if (!aLower.startsWith(searchLower) && bLower.startsWith(searchLower)) return 1;
+        
+        // Then alphabetical
+        return a.localeCompare(b);
+      });
+      
+      setSuggestions(sortedSuggestions.slice(0, 10)); // Show max 10 suggestions
+      setShowSuggestions(sortedSuggestions.length > 0);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);

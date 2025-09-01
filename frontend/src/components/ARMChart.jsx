@@ -137,7 +137,7 @@ const ARMChart = ({ armData, loanAmount }) => {
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-semibold mb-3 text-blue-900 oswald-light">Rate Adjustment Details</h4>
+              <h4 className="font-semibold mb-3 text-blue-900 inter-light">Rate Adjustment Details</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-blue-700">Initial Rate Period:</span>
@@ -159,7 +159,7 @@ const ARMChart = ({ armData, loanAmount }) => {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3 text-blue-900 oswald-light">Rate Caps Protection</h4>
+              <h4 className="font-semibold mb-3 text-blue-900 inter-light">Rate Caps Protection</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-blue-700">Initial Adjustment Cap:</span>

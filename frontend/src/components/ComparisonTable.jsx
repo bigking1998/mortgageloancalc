@@ -55,7 +55,7 @@ const ComparisonTable = ({ results }) => {
   return (
     <Card className="border-blue-200 shadow-lg">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50">
-        <CardTitle className="flex items-center gap-2 text-blue-900 oswald-heading">
+        <CardTitle className="flex items-center gap-2 text-blue-900 inter-heading">
           <TrendingUp className="w-5 h-5 text-blue-700" />
           Loan Comparison Results
         </CardTitle>

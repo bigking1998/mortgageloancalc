@@ -104,15 +104,15 @@ const MortgageCalculator = () => {
               <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-blue-100 to-blue-50">
                 <TabsTrigger value="comparison" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <Calculator className="w-4 h-4" />
-                  <span className="oswald-light">Comparison</span>
+                  <span className="inter-light">Comparison</span>
                 </TabsTrigger>
                 <TabsTrigger value="arm-analysis" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <TrendingUp className="w-4 h-4" />
-                  <span className="oswald-light">ARM Analysis</span>
+                  <span className="inter-light">ARM Analysis</span>
                 </TabsTrigger>
                 <TabsTrigger value="cost-breakdown" className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                   <FileText className="w-4 h-4" />
-                  <span className="oswald-light">Cost Breakdown</span>
+                  <span className="inter-light">Cost Breakdown</span>
                 </TabsTrigger>
               </TabsList>
 

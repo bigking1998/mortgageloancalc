@@ -212,7 +212,7 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
 
           {/* Business Contact Info */}
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-            <h4 className="font-semibold mb-2 text-blue-900 oswald-light">Your Mortgage Professional</h4>
+            <h4 className="font-semibold mb-2 text-blue-900 inter-light">Your Mortgage Professional</h4>
             <div className="text-sm space-y-1">
               <p className="font-medium text-blue-900">{BUSINESS_INFO.contact.name}</p>
               <p className="text-blue-800">{BUSINESS_INFO.company}</p>

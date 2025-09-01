@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { Search, MapPin, Bed, Bath, Square, Calendar, DollarSign, Heart, X, Image as ImageIcon } from 'lucide-react';
-import { searchPropertiesByAddress, getPropertyDetails } from '../services/propertyApi';
+import { searchPropertiesByAddress, getPropertyDetails, getAddressSuggestions } from '../services/propertyApi';
 
 const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,98 +14,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-
-  // Comprehensive address suggestions for autocomplete
-  const ADDRESS_SUGGESTIONS = [
-    // New York addresses
-    '11 24th Street, New York, NY 10011',
-    '25 24th Street, New York, NY 10010',
-    '123 Main Street, New York, NY 10001',
-    '456 Broadway, New York, NY 10013',
-    '789 Park Avenue, New York, NY 10021',
-    '101 Central Park West, New York, NY 10023',
-    '250 Madison Avenue, New York, NY 10016',
-    '350 Fifth Avenue, New York, NY 10118',
-    '500 Times Square, New York, NY 10036',
-    '85 Wall Street, New York, NY 10005',
-    '15 East 84th Street, New York, NY 10028',
-    '200 West 79th Street, New York, NY 10024',
-    '75 Liberty Street, New York, NY 10006',
-    '300 East 23rd Street, New York, NY 10010',
-    
-    // Los Angeles addresses
-    '456 Oak Avenue, Los Angeles, CA 90210',
-    '777 Sunset Boulevard, Los Angeles, CA 90028',
-    '1234 Hollywood Boulevard, Los Angeles, CA 90028',
-    '555 Rodeo Drive, Beverly Hills, CA 90210',
-    '888 Wilshire Boulevard, Los Angeles, CA 90017',
-    '2000 Avenue of the Stars, Los Angeles, CA 90067',
-    '1600 Vine Street, Los Angeles, CA 90028',
-    '9000 Sunset Boulevard, West Hollywood, CA 90069',
-    '1 Santa Monica Boulevard, Santa Monica, CA 90401',
-    '3000 Olympic Boulevard, Los Angeles, CA 90006',
-    
-    // Miami addresses
-    '789 Pine Street, Miami, FL 33101',
-    '999 Ocean Avenue, Miami Beach, FL 33139',
-    '1500 Collins Avenue, Miami Beach, FL 33139',
-    '200 Biscayne Boulevard, Miami, FL 33131',
-    '500 Lincoln Road, Miami Beach, FL 33139',
-    '300 Ocean Drive, Miami Beach, FL 33139',
-    '1000 South Beach Drive, Miami Beach, FL 33139',
-    '400 Alton Road, Miami Beach, FL 33139',
-    
-    // Chicago addresses
-    '100 North Michigan Avenue, Chicago, IL 60601',
-    '500 Lake Shore Drive, Chicago, IL 60611',
-    '1000 West Madison Street, Chicago, IL 60607',
-    '250 East Pearson Street, Chicago, IL 60611',
-    '800 North State Street, Chicago, IL 60610',
-    
-    // San Francisco addresses
-    '555 Market Street, San Francisco, CA 94105',
-    '1600 Amphitheatre Parkway, Mountain View, CA 94043',
-    '1 Infinite Loop, Cupertino, CA 95014',
-    '101 California Street, San Francisco, CA 94111',
-    '500 Terry Francois Boulevard, San Francisco, CA 94158',
-    '2000 Van Ness Avenue, San Francisco, CA 94109',
-    
-    // Boston addresses
-    '100 Federal Street, Boston, MA 02110',
-    '200 Clarendon Street, Boston, MA 02116',
-    '500 Boylston Street, Boston, MA 02116',
-    '1 Beacon Street, Boston, MA 02108',
-    
-    // Washington DC addresses
-    '1600 Pennsylvania Avenue, Washington, DC 20500',
-    '500 Constitution Avenue, Washington, DC 20001',
-    '1000 Connecticut Avenue, Washington, DC 20036',
-    
-    // Texas addresses
-    '100 Congress Avenue, Austin, TX 78701',
-    '500 Main Street, Dallas, TX 75201',
-    '1000 Louisiana Street, Houston, TX 77002',
-    
-    // Popular street names (partial for better matching)
-    'Main Street',
-    'Oak Street', 
-    'Pine Street',
-    'Park Avenue',
-    'Broadway',
-    '1st Street',
-    '2nd Street', 
-    '5th Avenue',
-    '24th Street',
-    '42nd Street',
-    'Madison Avenue',
-    'Wall Street',
-    'Sunset Boulevard',
-    'Hollywood Boulevard',
-    'Ocean Drive',
-    'Collins Avenue',
-    'Michigan Avenue',
-    'State Street'
-  ];
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -119,53 +28,44 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
     return new Intl.NumberFormat('en-US').format(num);
   };
 
-  // Enhanced address search with better matching
-  const handleSearchInputChange = (value) => {
-    setSearchTerm(value);
-    
-    if (value.length >= 2) {
-      const searchLower = value.toLowerCase();
-      
-      // Filter suggestions with multiple matching strategies
-      const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address => {
-        const addressLower = address.toLowerCase();
-        
-        // Match if search term is at the beginning of address
-        if (addressLower.startsWith(searchLower)) return true;
-        
-        // Match if search term is anywhere in the address
-        if (addressLower.includes(searchLower)) return true;
-        
-        // Match individual words (e.g., "24th" matches "11 24th Street")
-        const searchWords = searchLower.split(' ');
-        const addressWords = addressLower.split(' ');
-        
-        return searchWords.every(searchWord => 
-          addressWords.some(addressWord => 
-            addressWord.includes(searchWord) || searchWord.includes(addressWord)
-          )
-        );
-      });
-      
-      // Sort suggestions to show most relevant first
-      const sortedSuggestions = filteredSuggestions.sort((a, b) => {
-        const aLower = a.toLowerCase();
-        const bLower = b.toLowerCase();
-        
-        // Prioritize exact matches at start
-        if (aLower.startsWith(searchLower) && !bLower.startsWith(searchLower)) return -1;
-        if (!aLower.startsWith(searchLower) && bLower.startsWith(searchLower)) return 1;
-        
-        // Then alphabetical
-        return a.localeCompare(b);
-      });
-      
-      setSuggestions(sortedSuggestions.slice(0, 10)); // Show max 10 suggestions
-      setShowSuggestions(sortedSuggestions.length > 0);
-    } else {
+  // Debounce function for API calls
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func.apply(null, args), delay);
+    };
+  };
+
+  // Real address autocomplete using Mapbox API
+  const fetchAddressSuggestions = async (query) => {
+    if (query.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
+      return;
     }
+
+    setIsLoadingSuggestions(true);
+    try {
+      const addressSuggestions = await getAddressSuggestions(query);
+      setSuggestions(addressSuggestions);
+      setShowSuggestions(addressSuggestions.length > 0);
+    } catch (error) {
+      console.error('Error fetching address suggestions:', error);
+      setSuggestions([]);
+      setShowSuggestions(false);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  // Debounced version of fetchAddressSuggestions
+  const debouncedFetchSuggestions = debounce(fetchAddressSuggestions, 300);
+
+  // Handle address input changes and show suggestions
+  const handleSearchInputChange = (value) => {
+    setSearchTerm(value);
+    debouncedFetchSuggestions(value);
   };
 
   // Handle suggestion selection
@@ -185,12 +85,8 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
 
   // Show suggestions when input is focused
   const handleInputFocus = () => {
-    if (searchTerm.length >= 2) {
-      const filteredSuggestions = ADDRESS_SUGGESTIONS.filter(address =>
-        address.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions.slice(0, 8));
-      setShowSuggestions(filteredSuggestions.length > 0);
+    if (searchTerm.length >= 2 && suggestions.length > 0) {
+      setShowSuggestions(true);
     }
   };
 
@@ -243,7 +139,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
             Property Search
           </CardTitle>
           <CardDescription className="text-blue-700">
-            Search for properties by address to calculate your dream home's mortgage
+            Search for real properties by address using live data from Mapbox and Zillow
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
@@ -252,7 +148,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-4 h-4 z-10" />
               <Input
                 type="text"
-                placeholder="Start typing address... (e.g., 11 24th Street, Main Street)"
+                placeholder="Start typing any US address... (real data from Mapbox)"
                 value={searchTerm}
                 onChange={(e) => handleSearchInputChange(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -262,11 +158,18 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                 autoComplete="off"
               />
               
-              {/* Address Suggestions Dropdown */}
-              {showSuggestions && suggestions.length > 0 && (
+              {/* Real Address Suggestions Dropdown */}
+              {showSuggestions && (
                 <div className="absolute top-full left-0 right-0 bg-white border border-blue-300 rounded-md shadow-xl z-50 mt-1 max-h-64 overflow-y-auto">
                   <div className="px-3 py-2 bg-blue-50 border-b border-blue-200 text-xs text-blue-700">
-                    📍 {suggestions.length} address{suggestions.length !== 1 ? 'es' : ''} found - click to select
+                    {isLoadingSuggestions ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                        Loading real addresses...
+                      </div>
+                    ) : (
+                      <>🌍 {suggestions.length} real address{suggestions.length !== 1 ? 'es' : ''} found - powered by Mapbox</>
+                    )}
                   </div>
                   {suggestions.map((suggestion, index) => (
                     <div
@@ -284,7 +187,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                     </div>
                   ))}
                   <div className="px-4 py-2 text-xs text-blue-500 bg-blue-25 border-t border-blue-100">
-                    💡 Keep typing to refine results
+                    💡 These are real addresses that work with Zillow API
                   </div>
                 </div>
               )}
@@ -307,6 +210,14 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               )}
             </Button>
           </div>
+          
+          {/* Real Data Indicator */}
+          <div className="mt-3 text-xs text-blue-600 bg-blue-25 p-2 rounded-md">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span>Using live data: Mapbox for address autocomplete + Zillow for property details</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -318,7 +229,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               <div>
                 <CardTitle className="text-blue-900 inter-heading">Selected Property</CardTitle>
                 <CardDescription className="text-blue-700">
-                  Mortgage calculations will use this property's details
+                  Mortgage calculations will use this real property's details
                 </CardDescription>
               </div>
               <Button
@@ -382,37 +293,37 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
         <Card className="border-blue-200 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50">
             <CardTitle className="text-blue-900 inter-heading">
-              Search Results {properties.length > 0 && `(${properties.length} found)`}
+              Property Search Results {properties.length > 0 && `(${properties.length} found)`}
             </CardTitle>
             <CardDescription className="text-blue-700">
-              Click on a property to use it in your mortgage calculations
+              Real properties from Zillow API - click to calculate mortgage for your dream home
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-3 text-blue-700">Searching properties...</span>
+                <span className="ml-3 text-blue-700">Searching real properties with Zillow API...</span>
               </div>
             ) : properties.length === 0 ? (
               <div className="text-center py-8">
                 <MapPin className="w-12 h-12 text-blue-300 mx-auto mb-3" />
                 <p className="text-blue-600 mb-1">No properties found</p>
-                <p className="text-blue-500 text-sm">Try searching with a different address or location</p>
+                <p className="text-blue-500 text-sm">Try selecting a suggested address from the autocomplete dropdown</p>
                 <div className="mt-4 text-xs text-blue-400">
-                  <p className="mb-2">💡 Try typing these addresses to see autocomplete:</p>
+                  <p className="mb-2">💡 Type any US address to see real autocomplete suggestions:</p>
                   <div className="flex flex-wrap gap-2 justify-center">
                     <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
-                          onClick={() => handleSearchInputChange('123')}>
-                      "123" or "New York"
+                          onClick={() => handleSearchInputChange('123 Main')}>
+                      "123 Main Street"
                     </span>
                     <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
-                          onClick={() => handleSearchInputChange('Los')}>
-                      "Los Angeles"
+                          onClick={() => handleSearchInputChange('1600 Penn')}>
+                      "1600 Pennsylvania"
                     </span>
                     <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
-                          onClick={() => handleSearchInputChange('Miami')}>
-                      "Miami"
+                          onClick={() => handleSearchInputChange('350 Fifth')}>
+                      "350 Fifth Avenue"
                     </span>
                   </div>
                 </div>
@@ -494,6 +405,9 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                                 {property.propertyType}
                               </Badge>
                             )}
+                            <Badge className="text-xs bg-green-100 text-green-700 border-green-300">
+                              Real Zillow Data
+                            </Badge>
                           </div>
                           
                           <div className="text-right">

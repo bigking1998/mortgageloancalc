@@ -1,10 +1,64 @@
-// Property API service using Zillow RapidAPI
+// Property API service using Zillow RapidAPI + Mapbox for address autocomplete
 const RAPIDAPI_KEY = process.env.REACT_APP_RAPIDAPI_KEY;
+const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 const ZILLOW_API_BASE = 'https://real-time-zillow-data.p.rapidapi.com';
 
 const apiHeaders = {
   'X-RapidAPI-Key': RAPIDAPI_KEY,
   'X-RapidAPI-Host': 'real-time-zillow-data.p.rapidapi.com'
+};
+
+// Real address autocomplete using Mapbox Geocoding API
+export const getAddressSuggestions = async (query) => {
+  // Fallback mock suggestions if no Mapbox token
+  const FALLBACK_SUGGESTIONS = [
+    '11 24th Street, New York, NY 10011',
+    '25 24th Street, New York, NY 10010',
+    '123 Main Street, New York, NY 10001',
+    '456 Broadway, New York, NY 10013',
+    '789 Park Avenue, New York, NY 10021',
+    '555 Market Street, San Francisco, CA 94105',
+    '777 Sunset Boulevard, Los Angeles, CA 90028',
+    '999 Ocean Drive, Miami Beach, FL 33139'
+  ];
+
+  if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'your_mapbox_token_here') {
+    console.warn('Mapbox token not found, using fallback suggestions');
+    await new Promise(resolve => setTimeout(resolve, 300)); // Simulate API delay
+    
+    return FALLBACK_SUGGESTIONS
+      .filter(address => address.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 8);
+  }
+
+  if (query.length < 2) return [];
+
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?` +
+      `access_token=${MAPBOX_TOKEN}&` +
+      `autocomplete=true&` +
+      `country=US&` +
+      `types=address&` +
+      `limit=10`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Mapbox API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Transform Mapbox response to address strings
+    return data.features.map(feature => feature.place_name);
+    
+  } catch (error) {
+    console.error('Error fetching address suggestions:', error);
+    // Fallback to static suggestions on error
+    return FALLBACK_SUGGESTIONS
+      .filter(address => address.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 8);
+  }
 };
 
 // Mock data for development (replace with real API calls when API key is available)

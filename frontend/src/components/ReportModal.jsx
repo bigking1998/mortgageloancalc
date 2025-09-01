@@ -10,7 +10,7 @@ import { FileText, Download, Mail, Phone, User, Loader2 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { BUSINESS_INFO } from '../data/mockData';
 
-const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }) => {
+const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo, selectedProperty }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 

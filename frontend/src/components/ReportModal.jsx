@@ -135,8 +135,16 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo, 
           {/* Report Preview */}
           <Card className="border-blue-300 bg-gradient-to-r from-blue-50 to-blue-100">
             <CardContent className="p-4">
-              <h3 className="font-semibold text-lg mb-3 text-blue-900 inter-light">Report Preview</h3>
+              <h3 className="font-semibold text-lg mb-3 text-blue-900 inter-light">
+                {selectedProperty ? 'Property-Specific Report Preview' : 'Report Preview'}
+              </h3>
               <div className="space-y-3 text-sm">
+                {selectedProperty && (
+                  <div className="flex justify-between">
+                    <span className="text-blue-700">Property Address:</span>
+                    <span className="font-medium text-blue-900 text-right max-w-xs">{selectedProperty.address}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-blue-700">Home Price:</span>
                   <span className="font-medium text-blue-900">{formatCurrency(inputs.homePrice)}</span>
@@ -154,6 +162,12 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo, 
                     <p className="text-xs mt-1 text-blue-800">{formatCurrency(bestLoan?.monthlyPayment)} monthly</p>
                   </div>
                 </div>
+                {selectedProperty && (
+                  <div className="flex justify-between">
+                    <span className="text-blue-700">Property Type:</span>
+                    <span className="font-medium text-blue-900">{selectedProperty.propertyType || 'N/A'}</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

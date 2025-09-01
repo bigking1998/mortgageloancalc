@@ -71,7 +71,7 @@ const ARMChart = ({ armData, loanAmount }) => {
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 rounded ${scenario.color}`}></div>
                         <div>
-                          <span className="font-medium text-sm text-blue-900 oswald-light">{scenario.name}</span>
+                          <span className="font-medium text-sm text-blue-900 inter-light">{scenario.name}</span>
                           <p className="text-xs text-blue-600">{scenario.description}</p>
                         </div>
                       </div>

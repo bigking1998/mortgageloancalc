@@ -175,7 +175,7 @@ const MortgageCalculator = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-blue-900 mb-2 oswald-heading">
+                    <h3 className="text-xl font-bold text-blue-900 mb-2 inter-heading">
                       Get Your Complete Underwriter-Style Report
                     </h3>
                     <p className="text-blue-700">

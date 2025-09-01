@@ -142,7 +142,7 @@ const MortgageCalculator = () => {
                       <div className="space-y-4">
                         {Object.entries(results).map(([key, loan]) => (
                           <div key={key} className="border border-blue-200 rounded-lg p-4 bg-gradient-to-r from-blue-25 to-white">
-                            <h4 className="font-semibold text-lg mb-2 text-blue-900 oswald-light">{loan.loanType}</h4>
+                            <h4 className="font-semibold text-lg mb-2 text-blue-900 inter-light">{loan.loanType}</h4>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                               <div>
                                 <p className="text-blue-600">Monthly P&I</p>

@@ -188,7 +188,7 @@ const MortgageCalculator = () => {
                     className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 shadow-lg"
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    <span className="oswald-light">Download Report</span>
+                    <span className="inter-light">Download Report</span>
                   </Button>
                 </div>
               </CardContent>

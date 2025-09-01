@@ -252,7 +252,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-4 h-4 z-10" />
               <Input
                 type="text"
-                placeholder="Enter address (e.g., 123 Main St, New York, NY)"
+                placeholder="Start typing address... (e.g., 11 24th Street, Main Street)"
                 value={searchTerm}
                 onChange={(e) => handleSearchInputChange(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -264,7 +264,10 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               
               {/* Address Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-blue-300 rounded-md shadow-lg z-50 mt-1 max-h-64 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 bg-white border border-blue-300 rounded-md shadow-xl z-50 mt-1 max-h-64 overflow-y-auto">
+                  <div className="px-3 py-2 bg-blue-50 border-b border-blue-200 text-xs text-blue-700">
+                    📍 {suggestions.length} address{suggestions.length !== 1 ? 'es' : ''} found - click to select
+                  </div>
                   {suggestions.map((suggestion, index) => (
                     <div
                       key={index}
@@ -281,7 +284,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                     </div>
                   ))}
                   <div className="px-4 py-2 text-xs text-blue-500 bg-blue-25 border-t border-blue-100">
-                    💡 Click any address to auto-fill
+                    💡 Keep typing to refine results
                   </div>
                 </div>
               )}

@@ -119,13 +119,13 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-blue-200">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-blue-600" />
+          <DialogTitle className="flex items-center gap-2 text-blue-900 oswald-heading">
+            <FileText className="w-5 h-5 text-blue-700" />
             Get Your Complete Mortgage Analysis Report
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-blue-700">
             Enter your contact information to receive a comprehensive PDF report with all calculations, 
             recommendations, and next steps for your mortgage journey.
           </DialogDescription>
@@ -133,25 +133,25 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
 
         <div className="space-y-6">
           {/* Report Preview */}
-          <Card className="border-blue-200">
+          <Card className="border-blue-300 bg-gradient-to-r from-blue-50 to-blue-100">
             <CardContent className="p-4">
-              <h3 className="font-semibold text-lg mb-3">Report Preview</h3>
+              <h3 className="font-semibold text-lg mb-3 text-blue-900 oswald-light">Report Preview</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Home Price:</span>
-                  <span className="font-medium">{formatCurrency(inputs.homePrice)}</span>
+                  <span className="text-blue-700">Home Price:</span>
+                  <span className="font-medium text-blue-900">{formatCurrency(inputs.homePrice)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Down Payment:</span>
-                  <span className="font-medium">{inputs.downPaymentPercent}% ({formatCurrency(inputs.homePrice * inputs.downPaymentPercent / 100)})</span>
+                  <span className="text-blue-700">Down Payment:</span>
+                  <span className="font-medium text-blue-900">{inputs.downPaymentPercent}% ({formatCurrency(inputs.homePrice * inputs.downPaymentPercent / 100)})</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Recommended Loan:</span>
+                  <span className="text-blue-700">Recommended Loan:</span>
                   <div className="text-right">
-                    <Badge variant="outline" className="text-green-600 border-green-600">
+                    <Badge variant="outline" className="text-blue-700 border-blue-600">
                       {bestLoan?.loanType}
                     </Badge>
-                    <p className="text-xs mt-1">{formatCurrency(bestLoan?.monthlyPayment)} monthly</p>
+                    <p className="text-xs mt-1 text-blue-800">{formatCurrency(bestLoan?.monthlyPayment)} monthly</p>
                   </div>
                 </div>
               </div>
@@ -160,66 +160,66 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
 
           {/* Contact Form */}
           <div className="space-y-4">
-            <h3 className="font-semibold">Contact Information</h3>
+            <h3 className="font-semibold text-blue-900 oswald-light">Contact Information</h3>
             
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">Full Name *</Label>
+              <Label htmlFor="name" className="text-sm font-medium text-blue-900">Full Name *</Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-4 h-4" />
                 <Input
                   id="name"
                   type="text"
                   value={leadInfo.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Enter your full name"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">Email Address *</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-blue-900">Email Address *</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-4 h-4" />
                 <Input
                   id="email"
                   type="email"
                   value={leadInfo.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="your.email@example.com"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm font-medium">Phone Number *</Label>
+              <Label htmlFor="phone" className="text-sm font-medium text-blue-900">Phone Number *</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 w-4 h-4" />
                 <Input
                   id="phone"
                   type="tel"
                   value={leadInfo.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="(555) 123-4567"
                 />
               </div>
             </div>
           </div>
 
-          <Separator />
+          <Separator className="bg-blue-200" />
 
           {/* Business Contact Info */}
-          <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="font-semibold mb-2">Your Mortgage Professional</h4>
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+            <h4 className="font-semibold mb-2 text-blue-900 oswald-light">Your Mortgage Professional</h4>
             <div className="text-sm space-y-1">
-              <p className="font-medium">{BUSINESS_INFO.contact.name}</p>
-              <p>{BUSINESS_INFO.company}</p>
-              <p className="text-slate-600">NMLS: {BUSINESS_INFO.nmls}</p>
+              <p className="font-medium text-blue-900">{BUSINESS_INFO.contact.name}</p>
+              <p className="text-blue-800">{BUSINESS_INFO.company}</p>
+              <p className="text-blue-700">NMLS: {BUSINESS_INFO.nmls}</p>
               <div className="flex flex-wrap gap-4 mt-2 text-xs">
-                <span>📱 {BUSINESS_INFO.contact.cell}</span>
-                <span>📧 {BUSINESS_INFO.contact.email}</span>
+                <span className="text-blue-700">📱 {BUSINESS_INFO.contact.cell}</span>
+                <span className="text-blue-700">📧 {BUSINESS_INFO.contact.email}</span>
               </div>
             </div>
           </div>
@@ -229,30 +229,30 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
             <Button
               onClick={generatePDFReport}
               disabled={isGenerating}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg"
             >
               {isGenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating Report...
+                  <span className="oswald-light">Generating Report...</span>
                 </>
               ) : (
                 <>
                   <Download className="w-4 h-4 mr-2" />
-                  Download Report & Schedule Consultation
+                  <span className="oswald-light">Download Report & Schedule Consultation</span>
                 </>
               )}
             </Button>
             <Button
               variant="outline"
               onClick={onClose}
-              className="sm:w-24"
+              className="sm:w-24 border-blue-300 text-blue-700 hover:bg-blue-50"
             >
-              Cancel
+              <span className="oswald-light">Cancel</span>
             </Button>
           </div>
 
-          <p className="text-xs text-slate-500 text-center">
+          <p className="text-xs text-blue-600 text-center">
             By submitting this form, you agree to be contacted by {BUSINESS_INFO.company} 
             regarding your mortgage needs. Your information will be kept confidential and secure.
           </p>

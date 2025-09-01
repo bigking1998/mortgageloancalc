@@ -12,16 +12,16 @@ body {
 }
 
 /* Brand Typography */
-.oswald-heading {
-    font-family: 'Oswald', sans-serif;
+.inter-heading {
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: -1px;
 }
 
-.oswald-light {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.01em;
+.inter-light {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.5px;
 }
 
 /* Brand Colors - Blues from logo */

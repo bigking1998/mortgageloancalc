@@ -135,7 +135,7 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
           {/* Report Preview */}
           <Card className="border-blue-300 bg-gradient-to-r from-blue-50 to-blue-100">
             <CardContent className="p-4">
-              <h3 className="font-semibold text-lg mb-3 text-blue-900 oswald-light">Report Preview</h3>
+              <h3 className="font-semibold text-lg mb-3 text-blue-900 inter-light">Report Preview</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-blue-700">Home Price:</span>

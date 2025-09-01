@@ -295,6 +295,23 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                 <MapPin className="w-12 h-12 text-blue-300 mx-auto mb-3" />
                 <p className="text-blue-600 mb-1">No properties found</p>
                 <p className="text-blue-500 text-sm">Try searching with a different address or location</p>
+                <div className="mt-4 text-xs text-blue-400">
+                  <p className="mb-2">💡 Try typing these addresses to see autocomplete:</p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
+                          onClick={() => handleSearchInputChange('123')}>
+                      "123" or "New York"
+                    </span>
+                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
+                          onClick={() => handleSearchInputChange('Los')}>
+                      "Los Angeles"
+                    </span>
+                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs cursor-pointer hover:bg-blue-200"
+                          onClick={() => handleSearchInputChange('Miami')}>
+                      "Miami"
+                    </span>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="grid gap-6">

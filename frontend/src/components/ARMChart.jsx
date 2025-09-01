@@ -185,7 +185,7 @@ const ARMChart = ({ armData, loanAmount }) => {
             <div className="flex items-start gap-3">
               <Info className="w-5 h-5 text-blue-700 mt-0.5" />
               <div className="text-sm text-blue-900">
-                <p className="font-semibold mb-2 oswald-light">ARM Considerations:</p>
+                <p className="font-semibold mb-2 inter-light">ARM Considerations:</p>
                 <ul className="space-y-1 text-xs text-blue-800">
                   <li>• ARM rates typically start lower but can increase significantly</li>
                   <li>• Payment shock risk if rates rise substantially after year 5</li>

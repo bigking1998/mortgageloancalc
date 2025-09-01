@@ -156,29 +156,32 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
                 onChange={(e) => handleSearchInputChange(e.target.value)}
                 onKeyPress={handleKeyPress}
                 onBlur={handleInputBlur}
-                onFocus={() => {
-                  if (suggestions.length > 0) {
-                    setShowSuggestions(true);
-                  }
-                }}
+                onFocus={handleInputFocus}
                 className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                autoComplete="off"
               />
               
               {/* Address Suggestions Dropdown */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-blue-200 rounded-md shadow-lg z-20 mt-1 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 bg-white border border-blue-300 rounded-md shadow-lg z-50 mt-1 max-h-64 overflow-y-auto">
                   {suggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm border-b border-blue-100 last:border-b-0"
-                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="px-4 py-3 hover:bg-blue-50 cursor-pointer text-sm border-b border-blue-100 last:border-b-0 transition-colors duration-150"
+                      onMouseDown={(e) => {
+                        e.preventDefault(); // Prevent input blur before click
+                        handleSuggestionClick(suggestion);
+                      }}
                     >
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3 h-3 text-blue-500" />
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0" />
                         <span className="text-blue-900">{suggestion}</span>
                       </div>
                     </div>
                   ))}
+                  <div className="px-4 py-2 text-xs text-blue-500 bg-blue-25 border-t border-blue-100">
+                    💡 Click any address to auto-fill
+                  </div>
                 </div>
               )}
             </div>

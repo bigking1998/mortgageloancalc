@@ -133,7 +133,7 @@ const MortgageCalculator = () => {
                 {results && (
                   <Card className="border-blue-200 shadow-lg">
                     <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50">
-                      <CardTitle className="oswald-heading text-blue-900">Detailed Cost Analysis</CardTitle>
+                      <CardTitle className="inter-heading text-blue-900">Detailed Cost Analysis</CardTitle>
                       <CardDescription className="text-blue-700">
                         Break down of all costs over different time periods
                       </CardDescription>

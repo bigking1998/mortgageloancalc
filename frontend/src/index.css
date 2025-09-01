@@ -11,6 +11,34 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Brand Typography */
+.oswald-heading {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.oswald-light {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+/* Brand Colors - Blues from logo */
+:root {
+    --brand-blue-50: #eff6ff;
+    --brand-blue-100: #dbeafe;
+    --brand-blue-200: #bfdbfe;
+    --brand-blue-300: #93c5fd;
+    --brand-blue-400: #60a5fa;
+    --brand-blue-500: #3b82f6;
+    --brand-blue-600: #2563eb;
+    --brand-blue-700: #1d4ed8;
+    --brand-blue-800: #1e40af;
+    --brand-blue-900: #1e3a8a;
+    --brand-blue-950: #172554;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;

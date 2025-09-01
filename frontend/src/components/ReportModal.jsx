@@ -234,12 +234,12 @@ const ReportModal = ({ isOpen, onClose, results, inputs, leadInfo, setLeadInfo }
               {isGenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  <span className="oswald-light">Generating Report...</span>
+                  <span className="inter-light">Generating Report...</span>
                 </>
               ) : (
                 <>
                   <Download className="w-4 h-4 mr-2" />
-                  <span className="oswald-light">Download Report & Schedule Consultation</span>
+                  <span className="inter-light">Download Report & Schedule Consultation</span>
                 </>
               )}
             </Button>

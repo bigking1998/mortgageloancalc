@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -15,6 +15,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const currentQueryRef = useRef('');
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -48,14 +49,20 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
     setIsLoadingSuggestions(true);
     try {
       const addressSuggestions = await getAddressSuggestions(query);
-      setSuggestions(addressSuggestions);
-      setShowSuggestions(addressSuggestions.length > 0);
+      if (query === currentQueryRef.current) {
+        setSuggestions(addressSuggestions);
+        setShowSuggestions(addressSuggestions.length > 0);
+      }
     } catch (error) {
       console.error('Error fetching address suggestions:', error);
-      setSuggestions([]);
-      setShowSuggestions(false);
+      if (query === currentQueryRef.current) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
     } finally {
-      setIsLoadingSuggestions(false);
+      if (query === currentQueryRef.current) {
+        setIsLoadingSuggestions(false);
+      }
     }
   };
 
@@ -65,6 +72,7 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
   // Handle address input changes and show suggestions
   const handleSearchInputChange = (value) => {
     setSearchTerm(value);
+    currentQueryRef.current = value;
     debouncedFetchSuggestions(value);
   };
 
@@ -332,99 +340,111 @@ const PropertySearch = ({ onPropertySelect, selectedProperty, onClearProperty })
               <div className="grid gap-6">
                 {properties.map((property, index) => (
                   <div key={property.zpid || index}>
-                    <div 
-                      className="flex gap-4 p-4 rounded-lg border border-blue-200 hover:border-blue-400 hover:bg-blue-25 cursor-pointer transition-all duration-200 hover:shadow-md"
-                      onClick={() => handlePropertyClick(property)}
-                    >
-                      {/* Property Image */}
-                      <div className="flex-shrink-0">
-                        {property.images && property.images[0] ? (
-                          <div className="relative">
-                            <img 
-                              src={property.images[0]} 
-                              alt="Property"
-                              className="w-32 h-24 object-cover rounded-lg border border-blue-200"
-                              onError={handleImageError}
-                            />
-                            {property.images.length > 1 && (
-                              <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                                +{property.images.length - 1} photos
+                    <Card className="hover:shadow-md transition-all duration-200 hover:border-blue-400 cursor-pointer overflow-hidden">
+                      <CardContent 
+                        className="p-4"
+                        onClick={() => handlePropertyClick(property)}
+                      >
+                        <div className="flex gap-4">
+                          {/* Property Image */}
+                          <div className="flex-shrink-0">
+                            {property.images && property.images[0] ? (
+                              <div className="relative">
+                                <img 
+                                  src={property.images[0]} 
+                                  alt="Property"
+                                  className="w-32 h-24 object-cover rounded-lg border border-blue-200"
+                                  onError={handleImageError}
+                                />
+                                {property.images.length > 1 && (
+                                  <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                                    +{property.images.length - 1} photos
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="w-32 h-24 bg-blue-100 rounded-lg border border-blue-200 flex items-center justify-center">
+                                <ImageIcon className="w-8 h-8 text-blue-400" />
                               </div>
                             )}
                           </div>
-                        ) : (
-                          <div className="w-32 h-24 bg-blue-100 rounded-lg border border-blue-200 flex items-center justify-center">
-                            <ImageIcon className="w-8 h-8 text-blue-400" />
-                          </div>
-                        )}
-                      </div>
 
-                      {/* Property Details */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold text-blue-900 inter-light truncate pr-2">
-                            {property.address}
-                          </h4>
-                          <div className="text-right flex-shrink-0">
-                            <p className="font-bold text-blue-900 text-lg">
-                              {formatCurrency(property.price || property.zestimate)}
-                            </p>
-                            {property.zestimate && property.price !== property.zestimate && (
-                              <p className="text-xs text-blue-600">
-                                Zestimate: {formatCurrency(property.zestimate)}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-wrap gap-4 mb-3">
-                          <div className="flex items-center gap-1 text-sm text-blue-700">
-                            <Bed className="w-4 h-4" />
-                            <span>{property.bedrooms} bed</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-blue-700">
-                            <Bath className="w-4 h-4" />
-                            <span>{property.bathrooms} bath</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-blue-700">
-                            <Square className="w-4 h-4" />
-                            <span>{formatNumber(property.livingArea)} sqft</span>
-                          </div>
-                          {property.yearBuilt && (
-                            <div className="flex items-center gap-1 text-sm text-blue-700">
-                              <Calendar className="w-4 h-4" />
-                              <span>Built {property.yearBuilt}</span>
+                          {/* Property Details */}
+                          <div className="flex-1 min-w-0 space-y-3">
+                            {/* Header with Address and Price */}
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-semibold text-blue-900 inter-light text-base leading-tight break-words">
+                                  {property.address}
+                                </h4>
+                              </div>
+                              <div className="text-right flex-shrink-0">
+                                <p className="font-bold text-blue-900 text-lg whitespace-nowrap">
+                                  {formatCurrency(property.price || property.zestimate)}
+                                </p>
+                                {property.zestimate && property.price !== property.zestimate && (
+                                  <p className="text-xs text-blue-600 whitespace-nowrap">
+                                    Zestimate: {formatCurrency(property.zestimate)}
+                                  </p>
+                                )}
+                              </div>
                             </div>
-                          )}
-                        </div>
+                            
+                            {/* Property Stats */}
+                            <div className="flex flex-wrap gap-4">
+                              <div className="flex items-center gap-1 text-sm text-blue-700">
+                                <Bed className="w-4 h-4 flex-shrink-0" />
+                                <span>{property.bedrooms} bed</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-sm text-blue-700">
+                                <Bath className="w-4 h-4 flex-shrink-0" />
+                                <span>{property.bathrooms} bath</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-sm text-blue-700">
+                                <Square className="w-4 h-4 flex-shrink-0" />
+                                <span>{formatNumber(property.livingArea)} sqft</span>
+                              </div>
+                              {property.yearBuilt && (
+                                <div className="flex items-center gap-1 text-sm text-blue-700">
+                                  <Calendar className="w-4 h-4 flex-shrink-0" />
+                                  <span>Built {property.yearBuilt}</span>
+                                </div>
+                              )}
+                            </div>
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex gap-2">
-                            {property.propertyType && (
-                              <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">
-                                {property.propertyType}
-                              </Badge>
+                            {/* Badges and Action */}
+                            <div className="flex items-center justify-between flex-wrap gap-2">
+                              <div className="flex gap-2 flex-wrap">
+                                {property.propertyType && (
+                                  <Badge variant="outline" className="text-xs border-blue-300 text-blue-700 whitespace-nowrap">
+                                    {property.propertyType.replace('_', ' ')}
+                                  </Badge>
+                                )}
+                                <Badge className="text-xs bg-green-100 text-green-700 border-green-300 whitespace-nowrap">
+                                  Real Zillow Data
+                                </Badge>
+                              </div>
+                              
+                              <div className="text-right">
+                                <p className="text-xs text-blue-600 whitespace-nowrap">
+                                  Click to calculate mortgage
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Description */}
+                            {property.description && (
+                              <div className="pt-1">
+                                <p className="text-sm text-blue-600 leading-relaxed line-clamp-3">
+                                  {property.description}
+                                </p>
+                              </div>
                             )}
-                            <Badge className="text-xs bg-green-100 text-green-700 border-green-300">
-                              Real Zillow Data
-                            </Badge>
-                          </div>
-                          
-                          <div className="text-right">
-                            <p className="text-xs text-blue-600">
-                              Click to calculate mortgage
-                            </p>
                           </div>
                         </div>
-
-                        {property.description && (
-                          <p className="text-sm text-blue-600 mt-2 line-clamp-2">
-                            {property.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    {index < properties.length - 1 && <Separator className="my-4 bg-blue-100" />}
+                      </CardContent>
+                    </Card>
+                    {index < properties.length - 1 && <div className="my-4" />}
                   </div>
                 ))}
               </div>
